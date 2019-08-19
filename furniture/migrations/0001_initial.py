@@ -33,4 +33,12 @@ class Migration(migrations.Migration):
             name='table',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='furniture.Table'),
         ),
+        migrations.RunSQL(sql="insert into furniture_table (id, name, height) values (1, 'test1', 11)", reverse_sql=""),
+        migrations.RunSQL(sql="insert into furniture_foot (number, style, table_id) values (1, 'plain', 1)", reverse_sql=""),
+        migrations.RunSQL(sql="insert into furniture_foot (number, style, table_id) values (2, 'plain', 1)", reverse_sql=""),
+        migrations.RunSQL(sql="insert into furniture_table (id, name, height) values (2, 'test2', 22)", reverse_sql=""),
+        migrations.RunSQL(sql="insert into furniture_foot (number, style, table_id) values (1, 'square', 2)",
+                          reverse_sql=""),
+        migrations.RunSQL(sql="insert into furniture_foot (number, style, table_id) values (2, 'round', 2)",
+                          reverse_sql=""),
     ]

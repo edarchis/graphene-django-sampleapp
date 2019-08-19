@@ -1,3 +1,5 @@
+import json
+
 import graphene
 from graphene import Schema
 from graphene_django import DjangoObjectType
@@ -26,17 +28,21 @@ class Query(graphene.ObjectType):
 
 class CreateTableMutation(graphene.ClientIDMutation):
     class Input:
+        name = graphene.String()
         height = graphene.Int()
 
     table = graphene.Field(TableNode)
 
     @classmethod
     def mutate(cls, root, info, input):
-        return super().mutate(root, info, input)
+        print(json.dumps(input))
+        table = Table.objects.create(name=input['name'], height=input['height'])
+        print(str(table))
+        return CreateTableMutation(table=table)
 
 
 class Mutation(graphene.ObjectType):
     create_table = CreateTableMutation.Field()
 
 
-schema = Schema(query=Query)
+schema = Schema(query=Query, mutation=Mutation)
