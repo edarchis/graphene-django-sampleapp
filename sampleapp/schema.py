@@ -6,6 +6,9 @@ from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 
 from furniture.models import Table, Foot
+from graphene_django.rest_framework.mutation import SerializerMutation
+
+from furniture.serializers import TableSerializer
 
 
 class TableNode(DjangoObjectType):
@@ -26,19 +29,11 @@ class Query(graphene.ObjectType):
     tables = DjangoFilterConnectionField(TableNode)
 
 
-class CreateTableMutation(graphene.ClientIDMutation):
-    class Input:
-        name = graphene.String()
-        height = graphene.Int()
-
-    table = graphene.Field(TableNode)
-
-    @classmethod
-    def mutate(cls, root, info, input):
-        print(json.dumps(input))
-        table = Table.objects.create(name=input['name'], height=input['height'])
-        print(str(table))
-        return CreateTableMutation(table=table)
+class CreateTableMutation(SerializerMutation):
+    class Meta:
+        serializer_class = TableSerializer
+        model_operations = ['create', 'update']
+        lookup_field = 'id'
 
 
 class Mutation(graphene.ObjectType):
